@@ -1,0 +1,127 @@
+<div class="visualize-container" *ngIf="!isLoading">
+  <!-- Header -->
+  <div class="header-section">
+    <button mat-icon-button (click)="goBack()" class="back-button">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <div class="header-info">
+      <h1>
+        <mat-icon>bar_chart</mat-icon>
+        Data Visualization
+      </h1>
+      <div class="file-selection">
+        <mat-form-field appearance="outline" class="file-selector">
+          <mat-label>Select File to Visualize</mat-label>
+          <mat-select [value]="fileId" (selectionChange)="onFileSelectionChange($event.value)">
+            <mat-option *ngFor="let file of uploadedFiles" [value]="file._id">
+              {{ file.originalName }} ({{ file.fileType.toUpperCase() }}, {{ file.rowCount }} rows)
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+    <button mat-raised-button color="primary" (click)="downloadData()" class="download-button" *ngIf="fileData">
+      <mat-icon>download</mat-icon>
+      Download Data
+    </button>
+  </div>
+
+  <!-- Charts Section -->
+  <mat-card class="charts-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>bar_chart</mat-icon>
+        Data Visualization
+      </mat-card-title>
+      <mat-card-subtitle>Interactive charts based on your data</mat-card-subtitle>
+    </mat-card-header>
+    
+    <mat-card-content>
+      <mat-tab-group [(selectedIndex)]="selectedTab" class="chart-tabs">
+        <!-- Bar Chart Tab -->
+        <mat-tab label="Bar Chart" *ngIf="hasDataForChart('bar')">
+          <div class="chart-container">
+            <div class="chart-wrapper">
+              <canvas #barChartCanvas></canvas>
+            </div>
+          </div>
+        </mat-tab>
+
+        <!-- Pie Chart Tab -->
+        <mat-tab label="Pie Chart" *ngIf="hasDataForChart('pie')">
+          <div class="chart-container">
+            <div class="chart-wrapper">
+              <canvas #pieChartCanvas></canvas>
+            </div>
+          </div>
+        </mat-tab>
+
+        <!-- Line Chart Tab -->
+        <mat-tab label="Line Chart" *ngIf="hasDataForChart('line')">
+          <div class="chart-container">
+            <div class="chart-wrapper">
+              <canvas #lineChartCanvas></canvas>
+            </div>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Data Preview Section -->
+  <mat-card class="data-preview-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>table_chart</mat-icon>
+        Data Preview
+      </mat-card-title>
+      <mat-card-subtitle>First 10 rows of your data</mat-card-subtitle>
+    </mat-card-header>
+    
+    <mat-card-content>
+      <div class="data-table" *ngIf="fileData?.data">
+        <div class="table-header">
+          <div class="table-row header-row">
+            <div class="table-cell" *ngFor="let column of fileData?.columns">
+              {{ column.name }}
+              <span class="column-type">({{ column.type }})</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="table-body">
+          <div class="table-row" *ngFor="let row of fileData?.data?.slice(0, 10); let i = index">
+            <div class="table-cell" *ngFor="let column of fileData?.columns">
+              {{ row[column.name] || '-' }}
+            </div>
+          </div>
+        </div>
+        
+        <div class="table-footer" *ngIf="fileData?.data && (fileData?.data?.length || 0) > 10">
+          <p>Showing first 10 rows of {{ fileData?.data?.length }} total rows</p>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
+
+<!-- Loading State -->
+<div class="loading-container" *ngIf="isLoading">
+  <mat-spinner diameter="50"></mat-spinner>
+  <p>Loading file data...</p>
+</div>
+
+<!-- Empty State -->
+<div class="empty-container" *ngIf="!isLoading && uploadedFiles.length === 0">
+  <mat-card class="empty-card">
+    <mat-card-content class="empty-content">
+      <mat-icon class="empty-icon">cloud_upload</mat-icon>
+      <h3>No files uploaded yet</h3>
+      <p>Upload CSV or Excel files to start visualizing your data</p>
+      <button mat-raised-button color="primary" routerLink="/upload">
+        <mat-icon>cloud_upload</mat-icon>
+        Upload Files
+      </button>
+    </mat-card-content>
+  </mat-card>
+</div>

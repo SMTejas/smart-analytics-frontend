@@ -1,0 +1,106 @@
+<div class="chat-container">
+  <mat-toolbar color="primary" class="chat-toolbar">
+    <button mat-icon-button routerLink="/dashboard" matTooltip="Back to Dashboard">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <span>AI Data Analysis Chat</span>
+    <span class="spacer"></span>
+    <button mat-icon-button (click)="logout()" matTooltip="Logout">
+      <mat-icon>logout</mat-icon>
+    </button>
+  </mat-toolbar>
+
+  <div class="chat-content">
+    <!-- File Selector -->
+    <mat-card class="file-selector-card">
+      <mat-card-content>
+        <div class="file-selector-wrapper">
+          <mat-form-field appearance="outline" class="file-select-field">
+            <mat-label>Select File to Analyze</mat-label>
+            <mat-select [(ngModel)]="selectedFileId">
+              <mat-option *ngFor="let file of uploadedFiles" [value]="file._id">
+                {{ file.originalName }} ({{ file.rowCount }} rows)
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <button 
+            mat-icon-button 
+            (click)="clearChat()" 
+            matTooltip="Clear Chat"
+            [disabled]="messages.length <= 1">
+            <mat-icon>clear_all</mat-icon>
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Chat Messages -->
+    <mat-card class="chat-messages-card">
+      <mat-card-content>
+        <div class="chat-messages" #chatContainer>
+          <div 
+            *ngFor="let message of messages" 
+            class="message"
+            [ngClass]="{'user-message': message.role === 'user', 'assistant-message': message.role === 'assistant'}">
+            <div class="message-content">
+              <div class="message-header">
+                <mat-icon *ngIf="message.role === 'user'">person</mat-icon>
+                <mat-icon *ngIf="message.role === 'assistant'">smart_toy</mat-icon>
+                <span class="message-role">{{ message.role === 'user' ? 'You' : 'AI Assistant' }}</span>
+                <span class="message-time">{{ message.timestamp | date:'short' }}</span>
+              </div>
+              <div class="message-text">{{ message.content }}</div>
+            </div>
+          </div>
+          
+          <!-- Loading indicator -->
+          <div *ngIf="isLoading" class="message assistant-message">
+            <div class="message-content">
+              <div class="message-header">
+                <mat-icon>smart_toy</mat-icon>
+                <span class="message-role">AI Assistant</span>
+              </div>
+              <div class="message-text loading-text">
+                <mat-progress-spinner diameter="20" mode="indeterminate"></mat-progress-spinner>
+                <span>Analyzing data...</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Input Area -->
+    <mat-card class="chat-input-card">
+      <mat-card-content>
+        <div class="input-wrapper">
+          <mat-form-field appearance="outline" class="message-input-field">
+            <mat-label>Ask a question about your data</mat-label>
+            <textarea 
+              matInput 
+              [(ngModel)]="currentMessage"
+              (keydown)="onKeyPress($event)"
+              placeholder="e.g., What was the revenue in 2025?"
+              rows="2"
+              [disabled]="isLoading || !selectedFileId">
+            </textarea>
+          </mat-form-field>
+          <button 
+            mat-raised-button 
+            color="primary" 
+            (click)="sendMessage()"
+            [disabled]="!currentMessage.trim() || isLoading || !selectedFileId"
+            class="send-button">
+            <mat-icon>send</mat-icon>
+            <span>Send</span>
+          </button>
+        </div>
+        <div class="input-hint" *ngIf="!selectedFileId">
+          <mat-icon>info</mat-icon>
+          <span>Please select a file to start chatting</span>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+

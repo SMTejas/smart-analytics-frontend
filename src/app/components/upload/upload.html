@@ -1,0 +1,119 @@
+<div class="upload-container">
+  <!-- Upload Section -->
+  <mat-card class="upload-card">
+    <mat-card-header>
+      <mat-card-title>
+        <button mat-icon-button (click)="goBack()" class="back-button">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+        <mat-icon>cloud_upload</mat-icon>
+        File Upload
+      </mat-card-title> 
+      <mat-card-subtitle>Upload CSV or Excel files for data visualization</mat-card-subtitle>
+    </mat-card-header>
+    
+    <mat-card-content>
+      <div class="upload-section">
+        <div class="file-input-container">
+          <input 
+            type="file" 
+            id="fileInput" 
+            (change)="onFileSelected($event)"
+            accept=".csv,.xlsx,.xls"
+            style="display: none;"
+          />
+          <label for="fileInput" class="file-input-label">
+            <mat-icon>attach_file</mat-icon>
+            <span>{{ selectedFile ? selectedFile.name : 'Choose File' }}</span>
+          </label>
+        </div>
+        
+        <div class="upload-actions" *ngIf="selectedFile">
+          <div class="file-info">
+            <mat-icon>{{ getFileIcon(selectedFile.name.split('.').pop() || '') }}</mat-icon>
+            <div class="file-details">
+              <span class="file-name">{{ selectedFile.name }}</span>
+              <span class="file-size">{{ formatFileSize(selectedFile.size) }}</span>
+            </div>
+          </div>
+          
+          <button 
+            mat-raised-button 
+            color="primary" 
+            (click)="uploadFile()"
+            [disabled]="isUploading"
+            class="upload-button"
+          >
+            <mat-icon>upload</mat-icon>
+            {{ isUploading ? 'Uploading...' : 'Upload File' }}
+          </button>
+        </div>
+        
+        <div class="upload-progress" *ngIf="isUploading">
+          <mat-progress-bar 
+            mode="determinate" 
+            [value]="uploadProgress"
+            class="progress-bar"
+          ></mat-progress-bar>
+          <span class="progress-text">{{ uploadProgress }}%</span>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Files List Section -->
+  <mat-card class="files-card" *ngIf="uploadedFiles.length > 0">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>folder</mat-icon>
+        Your Files
+      </mat-card-title>
+      <mat-card-subtitle>{{ uploadedFiles.length }} file(s) uploaded</mat-card-subtitle>
+    </mat-card-header>
+    
+    <mat-card-content>
+      <mat-list class="files-list">
+        <mat-list-item *ngFor="let file of uploadedFiles" class="file-item">
+          <mat-icon matListItemIcon>{{ getFileIcon(file.fileType) }}</mat-icon>
+          
+          <div matListItemTitle class="file-name">{{ file.originalName }}</div>
+          <div matListItemLine class="file-meta">
+            <mat-chip-set>
+              <mat-chip>{{ file.fileType.toUpperCase() }}</mat-chip>
+              <mat-chip>{{ file.rowCount }} rows</mat-chip>
+              <mat-chip>{{ formatDate(file.uploadDate) }}</mat-chip>
+            </mat-chip-set>
+          </div>
+          
+          <div class="file-actions">
+            <button 
+              mat-icon-button 
+              color="primary"
+              [routerLink]="['/visualize', file._id]"
+              matTooltip="View Charts"
+            >
+              <mat-icon>bar_chart</mat-icon>
+            </button>
+            <button 
+              mat-icon-button 
+              color="warn"
+              (click)="deleteFile(file._id)"
+              matTooltip="Delete File"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </mat-list-item>
+      </mat-list>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Empty State -->
+  <mat-card class="empty-card" *ngIf="uploadedFiles.length === 0">
+    <mat-card-content class="empty-content">
+      <mat-icon class="empty-icon">cloud_upload</mat-icon>
+      <h3>No files uploaded yet</h3>
+      <p>Upload your first CSV or Excel file to get started with data visualization</p>
+    </mat-card-content>
+  </mat-card>
+</div>

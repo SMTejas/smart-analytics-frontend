@@ -1,0 +1,347 @@
+.dashboard-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.dashboard-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  
+  .spacer {
+    flex: 1 1 auto;
+  }
+}
+
+.dashboard-content {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.welcome-card {
+  margin-bottom: 2rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.95);
+}
+
+.user-info {
+  background: #f5f5f5;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin: 1rem 0;
+  
+  h3 {
+    color: #333;
+    margin-bottom: 1rem;
+  }
+  
+  p {
+    margin: 0.5rem 0;
+    color: #666;
+  }
+}
+
+.features {
+  margin-top: 2rem;
+  
+  h3 {
+    color: #333;
+    margin-bottom: 1.5rem;
+  }
+}
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.feature-card {
+  text-align: center;
+  padding: 1.5rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 12px;
+  
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  }
+  
+  &.upload-card {
+    cursor: pointer;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    
+    &:hover {
+      background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+    }
+    
+    mat-icon {
+      color: white;
+    }
+    
+    h4, p {
+      color: white;
+    }
+  }
+  
+  &.visualization-card {
+    cursor: pointer;
+    background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+    color: white;
+    
+    &:hover {
+      background: linear-gradient(135deg, #45a049 0%, #3d8b40 100%);
+    }
+    
+    mat-icon {
+      color: white;
+    }
+    
+    h4, p {
+      color: white;
+    }
+  }
+  
+  &.chat-card {
+    cursor: pointer;
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+    color: white;
+    
+    &:hover {
+      background: linear-gradient(135deg, #ee5a6f 0%, #dd4a5f 100%);
+    }
+    
+    mat-icon {
+      color: white;
+    }
+    
+    h4, p {
+      color: white;
+    }
+  }
+  
+  mat-icon {
+    font-size: 3rem;
+    width: 3rem;
+    height: 3rem;
+    color: #667eea;
+    margin-bottom: 1rem;
+  }
+  
+  h4 {
+    color: #333;
+    margin: 1rem 0 0.5rem 0;
+    font-size: 1.2rem;
+  }
+  
+  p {
+    color: #666;
+    margin: 0;
+    font-size: 0.9rem;
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .dashboard-content {
+    padding: 1rem;
+  }
+  
+  .feature-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .user-info {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-content {
+    padding: 0.5rem;
+  }
+  
+  .welcome-card {
+    margin-bottom: 1rem;
+  }
+}
+
+// AI Insights Panel Styles
+.insights-card {
+  margin-top: 2rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.95);
+
+  ::ng-deep .mat-expansion-panel-header {
+    padding: 1.5rem;
+    
+    .mat-expansion-panel-header-title {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #667eea;
+      
+      mat-icon {
+        color: #ffc107;
+        font-size: 1.75rem;
+        width: 1.75rem;
+        height: 1.75rem;
+      }
+    }
+    
+    .mat-expansion-panel-header-description {
+      color: #666;
+      font-size: 0.9rem;
+    }
+  }
+
+  ::ng-deep .mat-expansion-panel-body {
+    padding: 1.5rem;
+  }
+}
+
+.insights-content {
+  padding: 1rem 0;
+}
+
+.file-selector {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+
+  .file-select-field {
+    flex: 1;
+    min-width: 200px;
+  }
+
+  .generate-button {
+    height: 56px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    
+    .spinner-inline {
+      display: inline-block;
+    }
+  }
+}
+
+.no-files-message {
+  text-align: center;
+  padding: 2rem;
+  color: #666;
+  
+  mat-icon {
+    font-size: 3rem;
+    width: 3rem;
+    height: 3rem;
+    color: #999;
+    margin-bottom: 1rem;
+  }
+  
+  p {
+    margin-bottom: 1.5rem;
+  }
+}
+
+.insights-display {
+  margin-top: 1.5rem;
+  padding: 1.5rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border-left: 4px solid #667eea;
+
+  .insights-text {
+    h4 {
+      color: #333;
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      
+      &::before {
+        content: '💡';
+        font-size: 1.25rem;
+      }
+    }
+
+    .insights-content-text {
+      color: #555;
+      line-height: 1.8;
+      white-space: pre-wrap;
+      
+      ul {
+        margin: 1rem 0;
+        padding-left: 1.5rem;
+        
+        li {
+          margin: 0.5rem 0;
+          line-height: 1.6;
+        }
+      }
+    }
+  }
+}
+
+.loading-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  gap: 1rem;
+  
+  p {
+    color: #666;
+    margin: 0;
+  }
+}
+
+// Snackbar styles
+::ng-deep {
+  .snackbar-success {
+    background-color: #4caf50 !important;
+  }
+  
+  .snackbar-error {
+    background-color: #f44336 !important;
+  }
+  
+  .snackbar-warning {
+    background-color: #ff9800 !important;
+  }
+}
+
+// Responsive design for insights panel
+@media (max-width: 768px) {
+  .file-selector {
+    flex-direction: column;
+    
+    .file-select-field {
+      width: 100%;
+    }
+    
+    .generate-button {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+  
+  .insights-display {
+    padding: 1rem;
+  }
+}
+

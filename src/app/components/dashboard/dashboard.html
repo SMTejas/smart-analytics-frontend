@@ -1,0 +1,132 @@
+<div class="dashboard-container">
+  <mat-toolbar color="primary" class="dashboard-toolbar">
+    <span>Smart Analytics Dashboard (AI-Enabled)</span>
+    <span class="spacer"></span>
+    <button mat-icon-button (click)="logout()" matTooltip="Logout">
+      <mat-icon>logout</mat-icon>
+    </button>
+  </mat-toolbar>
+
+  <div class="dashboard-content">
+    <mat-card class="welcome-card">
+      <mat-card-header>
+        <mat-card-title>Welcome to Smart Analytics Dashboard (AI-Enabled)</mat-card-title>
+        <mat-card-subtitle>You are successfully authenticated</mat-card-subtitle>
+      </mat-card-header>
+      
+      <mat-card-content>
+        <div class="user-info" *ngIf="currentUser">
+          <h3>User Information</h3>
+          <p><strong>Name:</strong> {{ currentUser.name }}</p>
+          <p><strong>Email:</strong> {{ currentUser.email }}</p>
+          <p><strong>Member Since:</strong> {{ currentUser.createdAt | date:'medium' }}</p>
+        </div>
+        
+        <div class="features">
+          <h3>Available Features</h3>
+          <div class="feature-grid"> 
+            <mat-card class="feature-card upload-card" routerLink="/upload">
+              <mat-card-content>
+                <mat-icon>cloud_upload</mat-icon>
+                <h4>File Upload</h4>
+                <p>Upload CSV/Excel files for data visualization</p>
+              </mat-card-content>
+            </mat-card>
+            
+            <mat-card class="feature-card visualization-card" routerLink="/visualization">
+              <mat-card-content>
+                <mat-icon>bar_chart</mat-icon>
+                <h4>Data Visualization</h4>
+                <p>Interactive charts and analytics</p>
+              </mat-card-content>
+            </mat-card>
+
+            <mat-card class="feature-card chat-card" routerLink="/chat">
+              <mat-card-content>
+                <mat-icon>chat</mat-icon>
+                <h4>Chat with AI</h4>
+                <p>Chat with AI for data analysis</p>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </div>
+      </mat-card-content>
+      
+      <mat-card-actions>
+        <button mat-raised-button color="primary" routerLink="/upload">
+          <mat-icon>cloud_upload</mat-icon>
+          Upload Files
+        </button>
+        <button mat-raised-button color="accent" routerLink="/visualization">
+          <mat-icon>bar_chart</mat-icon>
+          View Visualizations
+        </button>
+        <button mat-raised-button color="warn" (click)="logout()">
+          <mat-icon>logout</mat-icon>
+          Logout
+        </button>
+      </mat-card-actions>
+    </mat-card>
+
+    <!-- AI Insights Panel -->
+    <mat-card class="insights-card">
+      <mat-expansion-panel [(expanded)]="insightsPanelExpanded">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <mat-icon>lightbulb</mat-icon>
+            <span>AI Insights Generator</span>
+          </mat-panel-title>
+          <mat-panel-description>
+            Get AI-powered insights from your uploaded data
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+
+        <div class="insights-content">
+          <div class="file-selector" *ngIf="uploadedFiles.length > 0">
+            <mat-form-field appearance="outline" class="file-select-field">
+              <mat-label>Select File</mat-label>
+              <mat-select [(ngModel)]="selectedFileId">
+                <mat-option *ngFor="let file of uploadedFiles" [value]="file._id">
+                  {{ file.originalName }} ({{ file.rowCount }} rows)
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            
+            <button 
+              mat-raised-button 
+              color="primary" 
+              (click)="generateInsights()"
+              [disabled]="isLoadingInsights || !selectedFileId"
+              class="generate-button">
+              <mat-icon *ngIf="!isLoadingInsights">auto_awesome</mat-icon>
+              <mat-progress-spinner *ngIf="isLoadingInsights" diameter="20" mode="indeterminate" class="spinner-inline"></mat-progress-spinner>
+              <span>{{ isLoadingInsights ? 'Generating Insights...' : 'Generate Insights' }}</span>
+            </button>
+          </div>
+
+          <div class="no-files-message" *ngIf="uploadedFiles.length === 0">
+            <mat-icon>info</mat-icon>
+            <p>No files uploaded yet. Please upload a file first to generate insights.</p>
+            <button mat-raised-button color="primary" routerLink="/upload">
+              <mat-icon>cloud_upload</mat-icon>
+              Upload File
+            </button>
+          </div>
+
+          <div class="insights-display" *ngIf="insights && !isLoadingInsights">
+            <div class="insights-text">
+              <h4>AI-Generated Insights:</h4>
+              <div class="insights-content-text" [innerHTML]="formatInsights(insights)"></div>
+            </div>
+          </div>
+
+          <div class="loading-spinner" *ngIf="isLoadingInsights">
+            <mat-progress-spinner diameter="50" mode="indeterminate"></mat-progress-spinner>
+            <p>Analyzing your data with AI...</p>
+          </div>
+        </div>
+      </mat-expansion-panel>
+    </mat-card>
+  </div>
+</div>
+
